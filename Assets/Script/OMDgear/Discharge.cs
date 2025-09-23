@@ -8,36 +8,52 @@ public class Discharge : MonoBehaviour
 {
     private LineRenderer lineRenderer;
     private bool shoot;
-    private float linesize = 15f;
+    private float linesize = 20f;
     private float currentposition = 0.0f;
     private RaycastHit hit;
+    private Vector3 hitPoint = Vector3.zero;
 
     void Start()
     {
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = 2;
         lineRenderer.widthMultiplier = 0.2f;
+        lineRenderer.enabled = false;
         Debug.Log("LineRenderer 준비 완료!");
-        Debug.Log(transform.position.magnitude);
     }
 
     void Update()
     {
-        lineRenderer.enabled = true;
-        Vector3 lineStart = transform.position;
-        Vector3 lineEnd = transform.position + transform.forward * currentposition;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             shoot = !shoot;
+            if (shoot)
+            {
+                lineRenderer.enabled = true; // 발사할 때만 켜기
+            }
         }
-        if (shoot == true)
+        if (shoot)
         {
-            if (currentposition <= linesize)
+            if (currentposition <= linesize && hitPoint == Vector3.zero)
             {
                 currentposition += 0.1f;
-                lineRenderer.SetPosition(0, lineStart);
+            }
+
+            if (Physics.Raycast(transform.position, transform.forward, out hit, currentposition))
+            {
+                hitPoint = hit.point;
+                lineRenderer.SetPosition(0, transform.position);
+                lineRenderer.SetPosition(1, hit.point);
+                Debug.Log("hit");
+            }
+
+            else if (currentposition <= linesize)
+            {
+                hitPoint = Vector3.zero;
+                Vector3 lineEnd = transform.position + transform.forward * currentposition;
+                lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, lineEnd);
-                Debug.Log("Space bar");
+                Debug.Log("shoot");
             }
         }
         else
@@ -45,10 +61,18 @@ public class Discharge : MonoBehaviour
             if (currentposition > 0)
             {
                 currentposition -= 0.2f; // 발사보다 빠르게 회수
-                lineRenderer.SetPosition(0, lineStart);
-                lineRenderer.SetPosition(1, lineEnd);
+                Vector3 lineEnd = transform.position + transform.forward * currentposition;
 
-                Debug.Log("Space bar2");
+                lineRenderer.SetPosition(0, transform.position);
+                lineRenderer.SetPosition(1, lineEnd);
+                Debug.Log("collect");
+
+            }
+            if (currentposition <= 0f)
+            {
+                currentposition = 0f;
+                lineRenderer.enabled = false; // 선 꺼줌
+                hitPoint = Vector3.zero;
             }
         }
 
