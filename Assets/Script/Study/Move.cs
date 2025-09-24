@@ -8,7 +8,7 @@ public class Move : MonoBehaviour
     public float speed = 1.0f;
 
     private Vector3 velocity;
-public float gravity = -9.81f;
+    public float gravity = -9.81f;
 
 
 void Start()
