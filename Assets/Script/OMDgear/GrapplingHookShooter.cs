@@ -5,11 +5,11 @@ using UnityEngine;
 public class GrapplingHookShooter : MonoBehaviour
 {
     private LineRenderer lineRenderer;
-    private bool shoot;
-    private float linesize = 20f;
+    public static bool shoot;
+    private float linesize = 50f;
     private float currentposition = 0.0f;
     private RaycastHit hit;
-    private Vector3 hitPoint = Vector3.zero;
+    public static Vector3 hitPoint = Vector3.zero;
 
     void Start()
     {
@@ -17,7 +17,7 @@ public class GrapplingHookShooter : MonoBehaviour
         lineRenderer.positionCount = 2;
         lineRenderer.widthMultiplier = 0.2f;
         lineRenderer.enabled = false;
-        Debug.Log("LineRenderer 준비 완료!");
+        //Debug.Log("LineRenderer 준비 완료!");
     }
 
     void OnEnable()
@@ -31,13 +31,13 @@ public class GrapplingHookShooter : MonoBehaviour
 
     void TestFunction()
     {
-        print("델리게이트 작동함!");  // Debug.Log 대신 print 사용
+        //print("델리게이트 작동함!");  // Debug.Log 대신 print 사용
         shoot = !shoot;
-        print("shoot 값: " + shoot);
+        //print("shoot 값: " + shoot);
         if (shoot)
         {
             lineRenderer.enabled = true;
-            print("LineRenderer 켜짐");
+            //print("LineRenderer 켜짐");
         }
     }
 
@@ -56,7 +56,7 @@ public class GrapplingHookShooter : MonoBehaviour
         {
             if (currentposition <= linesize && hitPoint == Vector3.zero)
             {
-                currentposition += 0.1f;
+                currentposition += 0.3f;
             }
 
             if (Physics.Raycast(transform.position, transform.forward, out hit, currentposition))
@@ -64,7 +64,7 @@ public class GrapplingHookShooter : MonoBehaviour
                 hitPoint = hit.point;
                 lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, hit.point);
-                Debug.Log("hit");
+                //Debug.Log("hit");
             }
 
             else if (currentposition <= linesize)
@@ -73,19 +73,19 @@ public class GrapplingHookShooter : MonoBehaviour
                 Vector3 lineEnd = transform.position + transform.forward * currentposition;
                 lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, lineEnd);
-                Debug.Log("shoot");
+                //Debug.Log("shoot");
             }
         }
         else
         {
             if (currentposition > 0)
             {
-                currentposition -= 0.2f; // 발사보다 빠르게 회수
+                currentposition -= 0.5f; // 발사보다 빠르게 회수
                 Vector3 lineEnd = transform.position + transform.forward * currentposition;
 
                 lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, lineEnd);
-                Debug.Log("collect");
+                //Debug.Log("collect");
 
             }
             if (currentposition <= 0f)
