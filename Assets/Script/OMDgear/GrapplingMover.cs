@@ -43,7 +43,7 @@ public class GrapplingMover : MonoBehaviour
             if (Vector3.Distance(transform.position, targetPos) < 0.1f)
             {
                 Move = false;
-                //rint("이동 완료!");
+                //print("이동 완료!");
             }
             if (GrapplingHookShooter.shoot == false)
             {

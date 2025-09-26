@@ -22,14 +22,14 @@ public class GrapplingHookShooter : MonoBehaviour
 
     void OnEnable()
     {
-        GrapplingInputHandler.OnShootPressed += TestFunction;
+        GrapplingInputHandler.OnShootPressed += ShooterFunction;
     }
     void OnDisable()
     {
-        GrapplingInputHandler.OnShootPressed -= TestFunction;
+        GrapplingInputHandler.OnShootPressed -= ShooterFunction;
     }
 
-    void TestFunction()
+    void ShooterFunction()
     {
         //print("델리게이트 작동함!");  // Debug.Log 대신 print 사용
         shoot = !shoot;
@@ -43,14 +43,6 @@ public class GrapplingHookShooter : MonoBehaviour
 
     void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     shoot = !shoot;
-        //     if (shoot)
-        //     {
-        //         lineRenderer.enabled = true; // 발사할 때만 켜기
-        //     }
-        // }
 
         if (shoot)
         {
