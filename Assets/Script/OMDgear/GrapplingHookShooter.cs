@@ -10,6 +10,7 @@ public class GrapplingHookShooter : MonoBehaviour
     private float currentposition = 0.0f;
     private RaycastHit hit;
     public static Vector3 hitPoint = Vector3.zero;
+    private Vector3 shootDirection;
 
     void Start()
     {
@@ -37,6 +38,7 @@ public class GrapplingHookShooter : MonoBehaviour
         if (shoot)
         {
             lineRenderer.enabled = true;
+            shootDirection = Camera.main.transform.forward;
             //print("LineRenderer 켜짐");
         }
     }
@@ -51,7 +53,7 @@ public class GrapplingHookShooter : MonoBehaviour
                 currentposition += 0.3f;
             }
 
-            if (Physics.Raycast(transform.position, transform.forward, out hit, currentposition))
+            if (Physics.Raycast(transform.position, shootDirection, out hit, currentposition))
             {
                 hitPoint = hit.point;
                 lineRenderer.SetPosition(0, transform.position);
@@ -62,7 +64,7 @@ public class GrapplingHookShooter : MonoBehaviour
             else if (currentposition <= linesize)
             {
                 hitPoint = Vector3.zero;
-                Vector3 lineEnd = transform.position + transform.forward * currentposition;
+                Vector3 lineEnd = transform.position + shootDirection * currentposition;
                 lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, lineEnd);
                 //Debug.Log("shoot");
@@ -73,7 +75,7 @@ public class GrapplingHookShooter : MonoBehaviour
             if (currentposition > 0)
             {
                 currentposition -= 0.5f; // 발사보다 빠르게 회수
-                Vector3 lineEnd = transform.position + transform.forward * currentposition;
+                Vector3 lineEnd = transform.position + shootDirection * currentposition;
 
                 lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, lineEnd);
