@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class GrapplingHookShooter : MonoBehaviour
 {
-    private LineRenderer lineRenderer;
     public static bool shoot;
-    private float linesize = 50f;
+    public float linesize = 200f;
+    public static Vector3 hitPoint = Vector3.zero;
+    private LineRenderer lineRenderer;
     private float currentposition = 0.0f;
     private RaycastHit hit;
-    public static Vector3 hitPoint = Vector3.zero;
     private Vector3 shootDirection;
 
     void Start()
