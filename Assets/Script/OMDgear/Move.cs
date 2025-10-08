@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// CharacterController 방식의 이동
 public class Move : MonoBehaviour
 {
     CharacterController controller;

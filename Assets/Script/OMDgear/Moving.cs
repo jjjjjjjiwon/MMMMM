@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Rigidbody형식의 이동
 public class Moving : MonoBehaviour
 {
     Rigidbody rb;
@@ -26,19 +28,23 @@ public class Moving : MonoBehaviour
 
         // 이동 로직
 
-        Vector3 moveDir = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) moveDir += transform.forward;
-        if (Input.GetKey(KeyCode.S)) moveDir -= transform.forward;
+        // Vector3 moveDir = Vector3.zero;
+        // if (Input.GetKey(KeyCode.W)) moveDir += transform.forward;
+        // if (Input.GetKey(KeyCode.S)) moveDir -= transform.forward;
 
-        if (Input.GetKey(KeyCode.A)) moveDir -= transform.right;
-        if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.W)) transform.Rotate(0, -90 * Time.deltaTime, 0);
+        // if (Input.GetKey(KeyCode.A)) moveDir -= transform.right;
+        // if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.W)) transform.Rotate(0, -90 * Time.deltaTime, 0);
 
-        if (Input.GetKey(KeyCode.D)) moveDir += transform.right;
-        if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.W)) transform.Rotate(0, 90 * Time.deltaTime, 0);
+        // if (Input.GetKey(KeyCode.D)) moveDir += transform.right;
+        // if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.W)) transform.Rotate(0, 90 * Time.deltaTime, 0);
 
-        rb.AddForce(moveDir.normalized * speed);
+        // rb.AddForce(moveDir.normalized * speed);
 
 
+        Vector3 move = Camera.main.transform.right * Input.GetAxis("Horizontal") +
+                    Camera.main.transform.forward * Input.GetAxis("Vertical");
+
+        rb.velocity = new Vector3(move.x * speed, rb.velocity.y, move.z * speed);
         
     }
 
