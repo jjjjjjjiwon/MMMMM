@@ -6,7 +6,12 @@ public class GrapplingMover : MonoBehaviour
 {
     public static bool Move;
     public float MoveSpeed = 200f;
+    
     private Vector3 targetPos;
+    private Vector3 swingPoint;      // 와이어 끝점
+    private float wireLength;         // 와이어 길이
+    private Rigidbody rb;
+
     void OnEnable()
     {
         GrapplingInputHandler.OnMovePressed += MoveFunction;
