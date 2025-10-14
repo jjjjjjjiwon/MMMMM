@@ -22,16 +22,16 @@ public class Moving : MonoBehaviour
         Vector3 move = Camera.main.transform.right * Input.GetAxis("Horizontal") +
                    Camera.main.transform.forward * Input.GetAxis("Vertical");
     
-    rb.velocity = new Vector3(move.x * speed, rb.velocity.y, move.z * speed);
+        rb.velocity = new Vector3(move.x * speed, rb.velocity.y, move.z * speed);
         
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-    {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-    }
+    //     if (Input.GetKeyDown(KeyCode.Space))
+    // {
+    //     rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    // }
     }
 
 
