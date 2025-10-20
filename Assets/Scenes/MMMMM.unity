@@ -207,13 +207,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30895449}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -4.302}
+  m_LocalRotation: {x: 0.21662796, y: -0, z: -0, w: 0.9762543}
+  m_LocalPosition: {x: 0, y: 3.17, z: -4.302}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1626238612}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 25.022, y: 0, z: 0}
 --- !u!1 &268133599
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 268133600}
   - component: {fileID: 268133605}
   - component: {fileID: 268133604}
+  - component: {fileID: 268133606}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -315,7 +316,7 @@ Transform:
   m_GameObject: {fileID: 268133599}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.31, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -360,8 +361,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c3599ac880ee641a1207b30994d606, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
-  jumpForce: 5
+--- !u!114 &268133606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268133599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf75fb55ab35044b92f6d032cdcb704, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 10
+  runSpeed: 15
+  jumpForce: 0.3
+  groundCheck: {fileID: 1121222708}
+  groundCheckRadius: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1 &527959024
 GameObject:
   m_ObjectHideFlags: 0
@@ -468,8 +487,8 @@ GameObject:
   - component: {fileID: 1121222707}
   - component: {fileID: 1121222706}
   - component: {fileID: 1121222705}
-  m_Layer: 0
-  m_Name: Plane
+  m_Layer: 8
+  m_Name: ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -556,11 +575,11 @@ Transform:
   m_GameObject: {fileID: 1121222704}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 47.25}
-  m_LocalScale: {x: 1, y: 1, z: 11.055}
+  m_LocalPosition: {x: 0, y: 0.1, z: 47.25}
+  m_LocalScale: {x: 0.98759, y: 1, z: 11.055}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1626238612}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1626238610
 GameObject:
@@ -593,7 +612,6 @@ Transform:
   m_Children:
   - {fileID: 30895452}
   - {fileID: 527959026}
-  - {fileID: 1121222708}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
@@ -602,3 +620,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1626238612}
   - {fileID: 268133603}
+  - {fileID: 1121222708}

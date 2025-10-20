@@ -4,42 +4,44 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    // 플레이어
     public Transform player;
-    // 마우스 감도
     public float mouseSensitivity = 2.0f;
-
-    // 카메라 위치
-    private Vector3 offset;
-    // X축 각도
+    
+    // 카메라 거리 (추가)
+    public float normalDistance = 5f;   // 평소 거리
+    public float aimDistance = 2f;      // 조준 시 거리
+    public float zoomSpeed = 10f;       // 줌 속도
+    
+    private float currentDistance;      // 현재 거리
     private float rotationX = 0f;
-    // Y축 각도
     private float rotationY = 0f;
-
-
+    
+    void Start()
+    {
+        currentDistance = normalDistance;
+    }
+    
     void Update()
     {
-        // 마우스 입력
+        // 마우스 입력 (기존)
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
-
-        // 각도 계산
+        
         rotationY += mouseX;
         rotationX -= mouseY;
-
-        // X축 각도 제한, 좌우는 상관 없는데 상하 제한 안두면 
         rotationX = Mathf.Clamp(rotationX, -80f, 80f);
-
-        // 회전
+        
+        // 거리 변경 추가
+        float targetDistance = (WireGun.Instance != null && WireGun.Instance.isAiming) 
+                       ? aimDistance 
+                       : normalDistance;
+        currentDistance = Mathf.Lerp(currentDistance, targetDistance, Time.deltaTime * zoomSpeed);
+        
+        // 회전 및 위치 (기존, 거리만 변경)
         Quaternion rotation = Quaternion.Euler(rotationX, rotationY, 0);
-
-        // 카메라 위치
-        offset = rotation * new Vector3(0, 2, -5);
-
-        // 카메라 플레이어 따라가게
+        Vector3 offset = rotation * new Vector3(0, 2, -currentDistance);
+        
         transform.position = player.position + offset;
         transform.LookAt(player);
-
-        //Debug.Log($"mouseX: {mouseX}, mouseY: {mouseY}, rotationX: {rotationX}, rotationY: {rotationY}");
     }
 }

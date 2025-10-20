@@ -28,7 +28,7 @@ public class ProcecessExample : MonoBehaviour
     {
         public void Attack()
         {
-#warning "TODO: 공격 애니메이션 추가 필요"
+//#warning "TODO: 공격 애니메이션 추가 필요"
 
 //#error "공부를 위해 일부로 에러를 발생"
         }
