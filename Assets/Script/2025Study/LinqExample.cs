@@ -9,6 +9,13 @@ class Avengers
 {
     public string Name { get; set; }
     public string[] Waepon { get; set; }
+    public int CategoryId { get; set; }
+}
+
+class Category
+{
+    public int Id { get; set; }
+    public string CategoryName { get; set; }
 }
 
 public class LinqExample : MonoBehaviour
@@ -19,6 +26,31 @@ public class LinqExample : MonoBehaviour
         new Avengers {Name = "Thor", Waepon = new string[] {"Mjolnir", "Storm Breaker"}},
         new Avengers {Name = "Captain", Waepon = new string[] {"Mjolnir", "Shield"}},
     };
+
+    List<Avengers> alist2 = new List<Avengers>
+    {
+        new Avengers { Name = "Iron", CategoryId = 0},
+        new Avengers { Name = "Captain", CategoryId = 0},
+        new Avengers { Name = "Thor", CategoryId = 1},
+        new Avengers { Name = "Loki", CategoryId = 1},
+    };
+
+    List<Category> categoryis = new List<Category>
+    {
+        new Category { Id = 0, CategoryName = "Human"},
+        new Category { Id = 1, CategoryName = "Not Human"}
+    };
+
+    class Marvel
+    {
+        public string Name { get; set; }
+
+    }
+    class MarvelPhychic : Marvel
+    {
+        public string HeroType { get; set;}
+    
+    }
 
     void Start()
     {
@@ -76,19 +108,72 @@ public class LinqExample : MonoBehaviour
         q = from hero in avengers
             where hero.Length == 4
             select hero;
-        DebugLog(q);
+        //DebugLog(q);
 
-        // /////////////////////////// All
+        /////////////////////////// All
         q = from hero in alist
             where hero.Waepon.All(item => item.Length == 5)
             select hero.Name;
-        DebugLog(q);
+        //DebugLog(q);
 
-        // /////////////////////////// Any
+        /////////////////////////// Any
         q = from hero in alist
-            where hero.Waepon.Any(item=>item.StartsWith("M"))
+            where hero.Waepon.Any(item => item.StartsWith("M"))
             select hero.Name;
-        DebugLog(q);
+        //DebugLog(q);
+
+        /////////////////////////// select
+        q = from hero in avengers
+            select hero.Substring(0, 1);
+        //DebugLog(q);
+
+        ////////////////////////// join
+        var avengerGroups = from category in categoryis
+                            join avenger in alist2 on category.Id
+                            equals avenger.CategoryId into avengerGroup
+                            select avengerGroup;
+        // foreach (var avengerGroup in avengerGroups)
+        // {
+        //     Debug.Log("Group");
+        //     foreach (var avenger in avengerGroup)
+        //     {
+        //         Debug.Log($"{avenger.Name,20}");
+        //     }
+        // }
+
+        ////////////////////////// Group
+        var numbers = new List<int>() { 3, 2, 4, 66, 13 };
+        IEnumerable<IGrouping<int, int>> q2 = from number in numbers
+                                              group number by number % 2;
+        // foreach (var group in q2)
+        // {
+        //     Debug.Log(group.Key == 0 ? "Even" : "Odd");
+        //     foreach (var i in group)
+        //     {
+        //         Debug.Log(i);
+        //     }
+        // }
+
+        ////////////////////////// cast
+        Marvel[] marvels = new Marvel[]
+        {
+            new MarvelPhychic {Name = "Iron", HeroType = "Suit"},
+            new MarvelPhychic {Name = "Spider", HeroType = "Suit"},
+            new MarvelPhychic {Name = "Thor", HeroType = "God"},
+            new MarvelPhychic {Name = "Thanos", HeroType = "Villan"}
+        };
+        
+        var query = from MarvelPhychic marvelPhychic in marvels
+                    where marvelPhychic.HeroType == "Suit"
+                    select marvelPhychic;
+        foreach (var marvel in query)
+        {
+            Debug.Log(marvel.Name);
+        }
+        
+        
+
+
     }
 
 

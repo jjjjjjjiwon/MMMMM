@@ -18,10 +18,10 @@ public class PlayerGrapple : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1)) // 마우스 우클릭으로 그래플
+        if (Input.GetMouseButtonDown(0)) // 마우스 우클릭으로 그래플
             StartGrapple();
 
-        if (Input.GetMouseButtonUp(1))   // 버튼 떼면 해제
+        if (Input.GetMouseButtonUp(0))   // 버튼 떼면 해제
             StopGrapple();
 
         // 라인 렌더러 업데이트
@@ -53,6 +53,7 @@ public class PlayerGrapple : MonoBehaviour
 
     void StartGrapple()
     {
+        //Ray : 시작점과 방향을 가진 3D 공간의 “광선(선)”
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, maxGrappleDistance, grappleLayer))
