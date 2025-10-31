@@ -349,11 +349,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2124922780}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73b0e4fa63c97934b92421675f38aba2, type: 3}
+  m_Script: {fileID: 11500000, guid: f3e73cece31e9704a80e334f4ff6ffcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: D:\AAA\Current
-  fileName: FileStream.txt
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
