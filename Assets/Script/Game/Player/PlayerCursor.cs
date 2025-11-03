@@ -1,12 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerCursor : MonoBehaviour
 {
     public Camera mainCamera;
     public LayerMask aimLayer;
-    public Transform aimMarkerPrefab; // 조준점 마커 프리팹
+    public Transform aimMarkerPrefab;
+
     private Transform aimMarkerInstance;
 
     public bool IsAiming { get; private set; }
@@ -15,42 +14,64 @@ public class PlayerCursor : MonoBehaviour
 
     void Start()
     {
-        if (mainCamera == null) mainCamera = Camera.main;
-        aimMarkerInstance = Instantiate(aimMarkerPrefab);
-        aimMarkerInstance.gameObject.SetActive(false);
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
+
+        if (aimMarkerPrefab != null)
+        {
+            aimMarkerInstance = Instantiate(aimMarkerPrefab);
+            aimMarkerInstance.gameObject.SetActive(false);
+        }
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1)) // 우클릭 시작
+        // 우클릭으로 조준 모드 전환
+        if (Input.GetMouseButtonDown(1))
         {
             IsAiming = true;
-            aimMarkerInstance.gameObject.SetActive(true);
-        }
-        if (Input.GetMouseButtonUp(1)) // 우클릭 종료
-        {
-            IsAiming = false;
-            aimMarkerInstance.gameObject.SetActive(false);
+            if (aimMarkerInstance != null)
+                aimMarkerInstance.gameObject.SetActive(true);
         }
 
-        if (IsAiming)
+        if (Input.GetMouseButtonUp(1))
         {
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            IsAiming = false;
+            if (aimMarkerInstance != null)
+                aimMarkerInstance.gameObject.SetActive(false);
+        }
+
+        if (IsAiming && mainCamera != null)
+        {
+            // 🎯 마우스 위치 대신 화면 중앙 기준으로 Ray 쏘기
+            Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+            Ray ray = mainCamera.ScreenPointToRay(screenCenter);
+
             if (Physics.Raycast(ray, out RaycastHit hit, 100f, aimLayer))
             {
                 AimPoint = hit.point;
-                AimDirection = (AimPoint - transform.position).normalized;
-                aimMarkerInstance.position = AimPoint;
+                AimDirection = (AimPoint - mainCamera.transform.position).normalized;
+
+                if (aimMarkerInstance != null)
+                {
+                    aimMarkerInstance.position = AimPoint;
+                    aimMarkerInstance.LookAt(mainCamera.transform); // 마커가 카메라를 향하도록
+                }
             }
             else
             {
-                // 히트 못하면 먼 거리 조준 (예: 카메라 앞 100m)
+                // 맞은 게 없을 때는 카메라 앞쪽 100m 지점 표시
                 AimPoint = ray.origin + ray.direction * 100f;
                 AimDirection = ray.direction;
-                aimMarkerInstance.position = AimPoint;
+
+                if (aimMarkerInstance != null)
+                {
+                    aimMarkerInstance.position = AimPoint;
+                    aimMarkerInstance.LookAt(mainCamera.transform);
+                }
             }
         }
     }
 }
-
-

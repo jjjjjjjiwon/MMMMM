@@ -9,6 +9,7 @@ public class PlayerDash : MonoBehaviour
     public float dashDuration = 0.2f; // 대시 지속시간 , 지속 시간으로 거리를 
     public float dashColldown = 1f; // 대시 쿨타임
     public bool IsDashing => isDashing; // 다른 스크립트에서 대쉬 중인가 검사를 위해
+    public Camera playerCamera;
 
     private Rigidbody rb;
     private bool isDashing = false; // 대쉬 가능 여부

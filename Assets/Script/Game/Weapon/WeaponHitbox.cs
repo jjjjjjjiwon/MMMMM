@@ -5,34 +5,33 @@ using UnityEngine;
 public class WeaponHitbox : MonoBehaviour
 {
     public float damage = 10f; // 무기 데미지
-    private bool canDamage = false; // 데미지 활성화
+    private bool canDamage = false; // 데미지 활성화 여부
+    public bool CanDamage => canDamage;
+
 
     void OnTriggerEnter(Collider other)
     {
-        if (!canDamage) return; // 데미지 활성화가 안 되면 공격 안 되게
+        if (!canDamage) return; // 활성화되지 않았으면 아무것도 안 함
 
-        if (other.CompareTag("Enemy")) // 태그가 Enemy이면
+        if (other.CompareTag("Enemy")) // Enemy 태그 감지
         {
-                Debug.Log("테그");
-
-            EnemyHealth enemy = other.GetComponent<EnemyHealth>(); // EnemyHealth를 가지고 있으면
+            EnemyHealth enemy = other.GetComponent<EnemyHealth>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damage); // Enemy에게 데미지를 준다
-                Debug.Log("데미지");
-                canDamage = false; // 한 번에 한 대상만 데미지 줄 수도 있음
+                enemy.TakeDamage(damage); // 데미지 적용
+                Debug.Log($"Hit {other.name} for {damage} damage");
             }
         }
     }
 
-    // hit박스 활성화
+    // 히트박스 활성화
     public void EnableHitbox()
     {
         canDamage = true;
         gameObject.SetActive(true);
     }
 
-    // hit박스 비활성화
+    // 히트박스 비활성화
     public void DisableHitbox()
     {
         canDamage = false;
