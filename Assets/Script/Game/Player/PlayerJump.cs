@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    public float jumpForce = 5f;
-    public int maxJumps = 2;
-    public Transform groundCheck;
-    public LayerMask groundLayer;
+    public float jumpForce = 5f; // 점프 높이
+    public int maxJumps = 2;    // 점프 횟수
+    public Transform groundCheck;   // 땅 인가 체크할 오브젝트
+    public LayerMask groundLayer;   // 땅 인가?
 
     private Rigidbody rb;
-    private int jumpCount;
+    private int jumpCount; // 점프 횟수 세기
 
     void Awake() => rb = GetComponent<Rigidbody>();
 
@@ -18,7 +18,7 @@ public class PlayerJump : MonoBehaviour
     {
         if (IsGrounded())
         {
-            jumpCount = 0;
+            jumpCount = 1;
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && jumpCount < maxJumps)

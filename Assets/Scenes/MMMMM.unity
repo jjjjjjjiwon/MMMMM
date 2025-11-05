@@ -671,7 +671,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 20
   playerCamera: {fileID: 30895451}
-  mouseSensitivity: 2
 --- !u!114 &268133607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -813,7 +812,8 @@ MonoBehaviour:
   maxGrappleDistance: 300
   springStrength: 15
   damper: 5
-  stopDistance: 2
+  collisiondistance: 0
+  playerRolling: {fileID: 268133613}
 --- !u!114 &268133611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -862,6 +862,8 @@ MonoBehaviour:
   rollForce: 30
   rollDuration: 1
   rollSpinSpeed: 1080
+  stopDistance: 5
+  modelTransform: {fileID: 268133603}
   playerGrapple: {fileID: 268133610}
 --- !u!1 &303022566
 GameObject:
