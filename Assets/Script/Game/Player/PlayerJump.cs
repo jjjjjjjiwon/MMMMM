@@ -4,33 +4,53 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    public float jumpForce = 5f; // 점프 높이
-    public int maxJumps = 2;    // 점프 횟수
-    public Transform groundCheck;   // 땅 인가 체크할 오브젝트
-    public LayerMask groundLayer;   // 땅 인가?
+    public float jumpForce = 10f;
+    public LayerMask layerMask;
+    public int JumpCount = 2;
+    public float groundCheckDistance = 0.1f;
 
+    private int jumpCount;
+    private bool iGround;
+    private bool iJumpCheck;
     private Rigidbody rb;
-    private int jumpCount; // 점프 횟수 세기
 
-    void Awake() => rb = GetComponent<Rigidbody>();
+    void Awake()
+    {
+
+        rb.GetComponent<Rigidbody>();
+    }
 
     void Update()
     {
-        if (IsGrounded())
+        if (Input.GetKeyDown(KeyCode.Space) && (iGround || jumpCount > 0))
         {
-            jumpCount = 1;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < maxJumps)
-        {
-            jumpCount++;
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
+            Jump();
+        }      
+    }
+    
+    void FixedUpdate()
+    {
+        GroundCheck();
     }
 
-    bool IsGrounded()
+    void Jump()
     {
-        return Physics.CheckSphere(groundCheck.position, 0.2f, groundLayer);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        jumpCount--;
+
+        // if (isGrounded)
+        // {
+        //     currentJumpCount = maxJumpCount - 1;  // 바닥에 있을 때는 한 번만 점프 가능
+        // }
+    }
+
+    void GroundCheck()
+    {
+        iGround = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, layerMask);
+
+        // if (isGrounded)
+        // {
+        //     currentJumpCount = maxJumpCount; // 바닥에 있을 때는 점프 횟수 리셋
+        // }
     }
 }

@@ -1,62 +1,35 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movement")]
-    public float moveSpeed = 5f; // 속도
-    public Vector3 GetMoveInput() => moveInput; // 방향 넘기기
-    public Camera playerCamera; // 카메라 받기
-
+    public float Speed = 10f;  // 이동 속도
+    public Vector3 MoveInput => moveInput;
+    private Vector3 moveInput;
     private Rigidbody rb;
-    private Vector3 moveInput;  // 방향
-    private float xRotation = 0f;
 
     void Awake()
     {
-        rb = GetComponent<Rigidbody>(); // Rigidbody 초기화
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        HandleInput();
-        HandleLook();
-    }
-
-    // Rigidbody는 FixedUpdate 에서
-    void FixedUpdate()
-    {
+        // Player 이동 함수 호출
         MovePlayer();
     }
 
-    // 🔹 입력 처리
-    void HandleInput()
+    void FixedUpdate()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        moveInput = new Vector3(h, 0f, v).normalized;
+        // Rigidbody를 사용한 이동 처리
+        rb.MovePosition(rb.position + moveInput * Speed * Time.fixedDeltaTime);
     }
 
-    // 🔹 이동
-    public void MovePlayer()
+    void MovePlayer()
     {
-        Vector3 moveDir = transform.TransformDirection(moveInput); // 월드 좌표로
-        rb.MovePosition(rb.position + moveDir * moveSpeed * Time.fixedDeltaTime); // Rigidbody에서의 이동
+        float h = Input.GetAxis("Horizontal");  // 좌우 이동 (A, D, ←, →)
+        float v = Input.GetAxis("Vertical");    // 상하 이동 (W, S, ↑, ↓)
+
+        // 이동 벡터 계산
+        moveInput = new Vector3(h, 0f, v).normalized; // Y는 0으로 설정하여 XZ 평면에서만 이동하도록 함
     }
-
-    // 🔹 회전
-    public void HandleLook()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * 2f; // *2는 감도
-        float mouseY = Input.GetAxis("Mouse Y") * 2f;
-
-        xRotation -= mouseY; // 마우스를 위로 올리면 카메라는 아래로
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // 카메라를 좌우 제한
-
-        if (playerCamera != null)
-            playerCamera.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f); // 플레이어 Y축 회전에 따라 카메라도 같이 돌아가지만, 상하 회전은 카메라만 독립적으로 처리
-
-        transform.Rotate(Vector3.up * mouseX); // 플레이어 좌우 회전
-    }
-
 }
