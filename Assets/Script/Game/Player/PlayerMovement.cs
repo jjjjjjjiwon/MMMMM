@@ -1,35 +1,62 @@
-using UnityEngine;
+    using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
-{
-    public float Speed = 10f;  // 이동 속도
-    public Vector3 MoveInput => moveInput;
-    private Vector3 moveInput;
-    private Rigidbody rb;
-
-    void Awake()
+    public class PlayerMovement : MonoBehaviour
     {
-        rb = GetComponent<Rigidbody>();
-    }
+        public float Speed = 10f;  // 이동 속도
+        public Transform cameraTransform;   // 카메라
+        public Vector3 MoveInput => moveInput;
+        
+        private Vector3 moveInput;
+        private Rigidbody rb;
 
-    void Update()
-    {
-        // Player 이동 함수 호출
-        MovePlayer();
-    }
+        void Awake()
+        {
+            rb = GetComponent<Rigidbody>();
+            
+            // 카메라 확인
+            if (cameraTransform == null)
+            cameraTransform = Camera.main.transform;
+        }
+
+        void Update()
+        {
+            HandleInput();
+            RotatePlayerToMoveDirection();
+        }
 
     void FixedUpdate()
     {
-        // Rigidbody를 사용한 이동 처리
-        rb.MovePosition(rb.position + moveInput * Speed * Time.fixedDeltaTime);
+        MovePlayer();
+    }
+        void HandleInput()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        // 카메라 기준 방향으로 이동 벡터 계산
+        Vector3 forward = cameraTransform.forward;
+        Vector3 right = cameraTransform.right;
+
+        // Y축 제거 → 평면 이동
+        forward.y = 0f;
+        right.y = 0f;
+        forward.Normalize();
+        right.Normalize();
+
+        moveInput = (forward * v + right * h).normalized;
     }
 
     void MovePlayer()
     {
-        float h = Input.GetAxis("Horizontal");  // 좌우 이동 (A, D, ←, →)
-        float v = Input.GetAxis("Vertical");    // 상하 이동 (W, S, ↑, ↓)
-
-        // 이동 벡터 계산
-        moveInput = new Vector3(h, 0f, v).normalized; // Y는 0으로 설정하여 XZ 평면에서만 이동하도록 함
+        rb.MovePosition(rb.position + moveInput * Speed * Time.fixedDeltaTime);
     }
-}
+    void RotatePlayerToMoveDirection()
+    {
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            // 이동 방향으로 회전
+            Quaternion targetRotation = Quaternion.LookRotation(moveInput);
+            rb.rotation = Quaternion.Slerp(rb.rotation, targetRotation, 0.2f);
+        }
+    }
+    }

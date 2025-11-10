@@ -6,7 +6,7 @@ public class PlayerJump : MonoBehaviour
 {
     public float jumpForce = 10f;
     public LayerMask layerMask;
-    public int JumpCount = 2;
+    public int maxJumpCount = 2;
     public float groundCheckDistance = 0.1f;
 
     private int jumpCount;
@@ -16,14 +16,14 @@ public class PlayerJump : MonoBehaviour
 
     void Awake()
     {
-
-        rb.GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && (iGround || jumpCount > 0))
         {
+            Debug.Log("Space bar");
             Jump();
         }      
     }
@@ -37,20 +37,16 @@ public class PlayerJump : MonoBehaviour
     {
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         jumpCount--;
-
-        // if (isGrounded)
-        // {
-        //     currentJumpCount = maxJumpCount - 1;  // 바닥에 있을 때는 한 번만 점프 가능
-        // }
     }
 
     void GroundCheck()
     {
-        iGround = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, layerMask);
+        iGround = Physics.Raycast(transform.position - Vector3.up * 0.5f, Vector3.down, groundCheckDistance, layerMask);
 
-        // if (isGrounded)
-        // {
-        //     currentJumpCount = maxJumpCount; // 바닥에 있을 때는 점프 횟수 리셋
-        // }
+
+        if (iGround)
+        {
+            jumpCount = maxJumpCount; // 바닥에 있을 때는 점프 횟수 리셋
+        }
     }
 }

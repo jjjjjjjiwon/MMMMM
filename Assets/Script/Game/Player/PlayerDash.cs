@@ -7,6 +7,8 @@ public class PlayerDash : MonoBehaviour
     public float dashSpeed = 30f;
     public float dashDuration = 0.2f;
     public float dashCooltime = 0.1f;
+    public bool IsDashing => isDashing;
+
 
     private bool isDashing = false;       // 대시 상태
     private float dashTime = 0f;          // 대시 타이머
