@@ -17,7 +17,7 @@ public class RaycastDebugger : MonoBehaviour
     /// </summary>
     public Ray GetViewRay()
     {
-        return playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        return playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); // 화면 중앙으로 광선 발사
     }
 
     /// <summary>
