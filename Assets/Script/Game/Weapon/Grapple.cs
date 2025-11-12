@@ -2,16 +2,17 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(LineRenderer))]
-public class TitanGrappleController : MonoBehaviour
+public class Grapple : MonoBehaviour
 {
     [Header("Settings")]
     public LayerMask grappleLayer;
     public LineRenderer lineRenderer;
     public float pullForce = 25f;       // 목표점으로 당기는 힘
     public float maxDistance = 100f;     // 최대 그래플 거리
+    public bool IsGrappling => isGrappling;
 
-    private float ropeLength;
-    private bool isGrappling = false;
+    private float ropeLength;   // 로프 길이
+    private bool isGrappling = false;   // 그래플 여부
     private Vector3 grapplePoint;   // 충돌 지점
     private Rigidbody rb;
     private RaycastDebugger raycastDebugger;

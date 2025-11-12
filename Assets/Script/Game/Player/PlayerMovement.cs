@@ -17,6 +17,7 @@
             if (cameraTransform == null)
             cameraTransform = Camera.main.transform;
         }
+        
 
         void Update()
         {
