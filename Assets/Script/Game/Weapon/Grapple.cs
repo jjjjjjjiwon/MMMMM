@@ -7,7 +7,8 @@ public class Grapple : MonoBehaviour
     [Header("Settings")]
     public LayerMask grappleLayer;
     public LineRenderer lineRenderer;
-    public float pullForce = 25f;       // 목표점으로 당기는 힘
+    public float pullForce = 100f;  // 목표점으로 당기는 힘
+    public float maxSpeed = 150f;   // 최대 스피드
     public float maxDistance = 100f;     // 최대 그래플 거리
     public bool IsGrappling => isGrappling;
 
@@ -44,27 +45,30 @@ public class Grapple : MonoBehaviour
     }
 
     void FixedUpdate()
-{
-    if (!isGrappling) return;
+    {
+        if (!isGrappling) return;
 
-    Vector3 toGrapple = grapplePoint - transform.position; // 방향과 거리 둘다 가지고 있다
-    float distance = toGrapple.magnitude; // 거리만 가져오기
-    Vector3 dir = toGrapple.normalized; // 방향만 가져오기
+        Vector3 toGrapple = grapplePoint - transform.position;  // 거리, 방향
+        Vector3 dir = toGrapple.normalized; // 방향
+        float distance = toGrapple.magnitude;   // 거리
 
-    rb.AddForce(dir * pullForce, ForceMode.Force);   // 목표점으로 끌어당기는 역할
+        // 목표점으로 가속
+        float dynamicForce = Mathf.Lerp(0, pullForce, distance / maxDistance);  // 보간
+        rb.AddForce(dir * dynamicForce, ForceMode.Acceleration);    // 끌어 당기기
 
-    float horizontal = Input.GetAxis("Horizontal"); // A/D 또는 ←/→
-    // 앞뒤 입력(vertical)은 무시
-    Vector3 swingDir = Vector3.Cross(dir, Vector3.up).normalized * horizontal; // 스윙 운동을 위해, 좀더 공부 필요
-    rb.AddForce(swingDir, ForceMode.Force); // 스윙 힘 주기
-
+        // 너무 빠르면 감속
+        float maxSpeed = 50f;
+        if (rb.velocity.magnitude > maxSpeed)
+        {
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+        }
         // 로프 길이 조절, ============================================================= 조정 할 거임 ============================================================= 
         if (distance > ropeLength)
         {
-            Vector3 correction = dir * (distance - ropeLength);
-            rb.MovePosition(transform.position + correction);
+            rb.velocity = Vector3.ProjectOnPlane(rb.velocity, dir); // 줄 방향 속도 제거
+            rb.AddForce(dir * pullForce, ForceMode.Acceleration);
         }
-}
+    }
 
     void StartGrapple()
     {
