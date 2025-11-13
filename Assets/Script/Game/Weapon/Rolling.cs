@@ -4,53 +4,42 @@ using UnityEngine;
 
 public class Rolling : MonoBehaviour
 {
-    public float rollingSpeed = 720;
-    public float rollingStopLength;
-    
+    public float spinDuration = 1.0f;
+    public float spinSpeed = 720f; // 초당 회전도
+    public float spinRadius = 3f;
+    public float damage = 30f;
+    public LayerMask enemyLayer;
 
-
-    private bool isRolling;
-    private Rigidbody rb;
-    private Grapple grapple;
-
-    void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-        grapple = FindObjectOfType<Grapple>();
-
-    }
+    private bool isSpinning = false;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && grapple.IsGrappling)
+        if (Input.GetMouseButtonDown(1) && !isSpinning)
+            StartCoroutine(SpinAttackRoutine());
+    }
+
+    IEnumerator SpinAttackRoutine()
+    {
+        isSpinning = true;
+        float timer = 0f;
+
+        while (timer < spinDuration)
         {
-            StartRolling();
+            transform.Rotate(Vector3.up, spinSpeed * Time.deltaTime);
+
+            Collider[] hits = Physics.OverlapSphere(transform.position, spinRadius, enemyLayer);
+            foreach (var hit in hits)
+            {
+                Hitbox hb = hit.GetComponent<Hitbox>();
+                if (hb != null)
+                    hb.OnHit(damage);
+            }
+
+            timer += Time.deltaTime;
+            yield return null;
         }
 
-        // 그래플 중단 시 자동 정지
-        if (!grapple.IsGrappling && isRolling)
-        {
-            StopRolling();
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (!isRolling) return;
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, rollingSpeed * Time.fixedDeltaTime, rollingSpeed * Time.fixedDeltaTime));
-        
-        Debug.Log("Rolling");
-        
-    }
-
-    void StartRolling()
-    {   
-        isRolling = true;
-    }
-
-    void StopRolling()
-    {
-        isRolling = false;
+        isSpinning = false;
     }
     
 }

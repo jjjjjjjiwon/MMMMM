@@ -18,12 +18,14 @@ public class Grapple : MonoBehaviour
     private Rigidbody rb;
     private RaycastDebugger raycastDebugger;
     private PlayerDash playerDash;
+    private Cursor cursor;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
         playerDash = FindObjectOfType<PlayerDash>();
         raycastDebugger = FindObjectOfType<RaycastDebugger>();
+        cursor = FindObjectOfType<Cursor>();
 
         if (lineRenderer != null)
             lineRenderer.enabled = false;
@@ -56,11 +58,16 @@ public class Grapple : MonoBehaviour
         float dynamicForce = Mathf.Lerp(0, pullForce, distance / maxDistance);  // 보간
         rb.AddForce(dir * dynamicForce, ForceMode.Acceleration);    // 끌어 당기기
 
+        // 좌우 스윙 제어 (A/D 키)
+        float horizontal = Input.GetAxis("Horizontal");
+        Vector3 swingDir = Vector3.Cross(dir, Vector3.down).normalized * horizontal;
+        rb.AddForce(swingDir * pullForce * 0.3f, ForceMode.Acceleration);
+
         // 너무 빠르면 감속
         float maxSpeed = 50f;
-        if (rb.velocity.magnitude > maxSpeed)
+        if (rb.velocity.magnitude > maxSpeed) // 현재 속력 > 최대 속력
         {
-            rb.velocity = rb.velocity.normalized * maxSpeed;
+            rb.velocity = rb.velocity.normalized * maxSpeed;    // 속력은 = 방향1 * 최대 속력
         }
         // 로프 길이 조절, ============================================================= 조정 할 거임 ============================================================= 
         if (distance > ropeLength)
@@ -73,7 +80,9 @@ public class Grapple : MonoBehaviour
     void StartGrapple()
     {
         Ray ray = raycastDebugger.GetViewRay();
-        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, grappleLayer))
+
+        float sphereRaius = (cursor!= null) ? cursor.sphereRadius : 2f;
+        if (Physics.SphereCast(ray, sphereRaius, out RaycastHit hit, maxDistance, grappleLayer))    // 점이 아니라 , 원으로 
         {
             grapplePoint = hit.point;
             isGrappling = true;

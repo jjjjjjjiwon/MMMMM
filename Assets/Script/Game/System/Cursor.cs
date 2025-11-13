@@ -8,6 +8,7 @@ public class Cursor : MonoBehaviour
     public GameObject hitPointPrefab;
     public LayerMask targetLayer;
     public float rayDistance = 100f;
+    public float sphereRadius = 2f; // 감지 범위
     
     private GameObject currentMarker;
 
@@ -21,7 +22,7 @@ public class Cursor : MonoBehaviour
 
         Ray ray = raycastDebugger.GetViewRay();
 
-        if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, targetLayer))
+        if (Physics.SphereCast(ray, sphereRadius, out RaycastHit hit, rayDistance, targetLayer)) // 점이 아니라 구체 로 감지
         {
             Vector3 hitPoint = hit.point;
 
@@ -30,6 +31,7 @@ public class Cursor : MonoBehaviour
                 if (currentMarker == null)
                 {
                     currentMarker = Instantiate(hitPointPrefab, hitPoint, Quaternion.identity);
+                    //currentMarker.transform.localScale = Vector3.one * 3f; 
                 }
                 else
                 {
